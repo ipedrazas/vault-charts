@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "name" . }}
+        release: {{ .Release.Name }}
+        vault-version: {{ .Values.image.tag }}
+        devmode: {{ .Values.vault.devmode | quote }}
+    spec:
+      volumes:
+      - name: vault-conf
+        secret:
+         secretName: {{ template "name" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.vault.mode.dev }}
+          command: ["vault", "server", "-dev"]
+          {{- else }}
+          command: ["vault", "server", "-config", "/conf/config.json"]
+          {{- end }}
+          volumeMounts:
+            - name: vault-conf
+              mountPath: /conf
+          securityContext:
+            capabilities:
+              add:
+                - IPC_LOCK
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          env:
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.aws.region }}
+            - name: VAULT_ADDR
+              value: "http://{{ template "name" . }}:8200"
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+    {{- end }}
