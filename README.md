@@ -35,7 +35,7 @@ listener "tcp" {
 
 Unsealing makes the process of automating a Vault install difficult. Automated tools can easily install, configure, and start Vault, but unsealing it is a very manual process.
 
-This complicates the use of Vault inside of Kubernetes, because if the pod dies, kubernetes will start the pod again but it will be sealed.
+This complicates the use of Vault inside of Kubernetes, because if the pod dies, Kubernetes will start the pod again but it will be sealed.
 
 When Vault starts it has to be initialised:
 
@@ -58,7 +58,7 @@ Vault does not store the master key. Without at least 3 keys,
 your vault will remain permanently sealed.
 ```
 
-Once the vault has been initialised, it has to be unsealed
+Once the vault has been initialised, it has to be unsealed:
 
 ```
 vault unseal YE8GePrAGb2dH0/VxLt3ZO/Tzz2JxNuK9PWoEY8wHJ6v
@@ -68,7 +68,7 @@ vault unseal tkDd5bCpFaUuF4SLCjLzW9iiBf2CrM//fT+aHYBrcwVc
 
 ## Running Vault-ui
 
-Once the Vault has been unselaed, you can install a UI. This repo containes a chart with the [vault-ui](https://github.com/djenriquez/vault-ui) project by [DJ Eniquez](https://github.com/djenriquez).
+Once the Vault has been unsealed, you can install a UI. This repo contains a chart with the [vault-ui](https://github.com/djenriquez/vault-ui) project by [DJ Eniquez](https://github.com/djenriquez).
 
 To run this chart you need 2 settings: 
 
