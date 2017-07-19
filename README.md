@@ -12,7 +12,7 @@ There are 2 charts in this repo:
 The easiest way of running vault is using the `dev` mode (please, do not use it in production).
 
 ```
-helm install charts/vault"
+helm install charts/vault
 ```
 
 If you want to use the production mode you have to update the `config.json` key in the secret. Currently it is set up to use AWS S3 as the backend:
